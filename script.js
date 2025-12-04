@@ -3,23 +3,62 @@ let list = document.getElementById("taskList");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-//old tasks 
-tasks.forEach(task => {
+for (let i = 0; i < tasks.length; i++) {
   let li = document.createElement("li");
-  li.textContent = task;
-  list.appendChild(li);
-});
 
-//add new task 
+  let checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+
+  if (tasks[i].completed === true) {
+    checkbox.checked = true;
+  } else {
+    checkbox.checked = false;
+  }
+
+  checkbox.addEventListener("change", function () {
+    if (checkbox.checked === true) {
+      tasks[i].completed = true;
+    } else {
+      tasks[i].completed = false;
+    }
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  });
+
+  li.appendChild(checkbox);
+  li.appendChild(document.createTextNode(tasks[i].text));
+  list.appendChild(li);
+}
+
+// Add task-
 input.addEventListener("keydown", function (e) {
   if (e.key === "Enter" && input.value !== "") {
-    let task = input.value;
+
+    let task = {
+      text: input.value,
+      completed: false
+    };
 
     tasks.push(task);
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
     let li = document.createElement("li");
-    li.textContent = task;
+
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    checkbox.addEventListener("change", function () {
+      if (checkbox.checked === true) {
+        task.completed = true;
+      } else {
+        task.completed = false;
+      }
+
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    });
+
+    li.appendChild(checkbox);
+    li.appendChild(document.createTextNode(task.text));
     list.appendChild(li);
 
     input.value = "";
